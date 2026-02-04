@@ -25,18 +25,24 @@ RUN composer install --optimize-autoloader --no-dev
 
 RUN npm ci && npm run build
 
-RUN touch database/database.sqlite && chmod 777 database/database.sqlite
+RUN mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite && chmod 777 database
 
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
+RUN mkdir -p storage/framework/{sessions,views,cache} && \
+    mkdir -p storage/logs && \
+    mkdir -p bootstrap/cache && \
+    chmod -R 777 storage bootstrap/cache
 
-RUN php artisan migrate --force
+RUN php artisan key:generate --force || echo "APP_KEY will be set via environment"
 
-RUN php artisan db:seed --force
+RUN php artisan migrate --force || true
 
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+RUN php artisan db:seed --force || true
+
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache /app/database
+
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
 EXPOSE 8000
 
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+CMD ["/app/start.sh"]
