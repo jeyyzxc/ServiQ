@@ -33,6 +33,8 @@ RUN php artisan config:cache && \
 
 RUN php artisan migrate --force
 
+RUN php artisan db:seed --force
+
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 EXPOSE 8000

@@ -10,18 +10,24 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@serviq.com',
-            'password' => Hash::make('password'),
-            'is_admin' => true,
-        ]);
+        if (!User::where('email', 'admin@serviq.com')->exists()) {
+            User::create([
+                'name' => 'Admin',
+                'email' => 'admin@serviq.com',
+                'password' => Hash::make('admin123'),
+                'is_admin' => true,
+                'email_verified_at' => now(),
+            ]);
+        }
 
-        User::create([
-            'name' => 'Test User',
-            'email' => 'user@serviq.com',
-            'password' => Hash::make('password'),
-            'is_admin' => false,
-        ]);
+        if (!User::where('email', 'user@serviq.com')->exists()) {
+            User::create([
+                'name' => 'Test User',
+                'email' => 'user@serviq.com',
+                'password' => Hash::make('user123'),
+                'is_admin' => false,
+                'email_verified_at' => now(),
+            ]);
+        }
     }
 }

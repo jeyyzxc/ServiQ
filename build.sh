@@ -16,6 +16,9 @@ chmod 666 database/database.sqlite
 echo "Running migrations..."
 php artisan migrate --force --no-interaction
 
+echo "Creating admin and test users..."
+php artisan db:seed --force --no-interaction
+
 echo "Optimizing Laravel..."
 php artisan config:cache
 php artisan route:cache
