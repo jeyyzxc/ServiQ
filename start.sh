@@ -3,6 +3,10 @@ set -e
 
 echo "=== ServiQ Startup Script ==="
 
+echo "Setting HTTPS URL..."
+export APP_URL="https://serviq-wmt2.onrender.com"
+export ASSET_URL="https://serviq-wmt2.onrender.com"
+
 echo "Clearing all caches..."
 php artisan config:clear
 php artisan cache:clear
