@@ -78,6 +78,33 @@ class TicketController extends Controller
         return Response::json($tickets);
     }
 
+    public function adminDashboardStats()
+    {
+        $this->ensureAdmin();
+
+        $total = Ticket::whereIn('status', ['open', 'in_progress'])->count();
+        $open = Ticket::where('status', 'open')->count();
+        $inProgress = Ticket::where('status', 'in_progress')->count();
+
+        $resolvedToday = TicketLog::whereDate('created_at', today())
+            ->where('to_status', 'resolved')
+            ->distinct('ticket_id')
+            ->count('ticket_id');
+
+        $recentTickets = Ticket::ordered()
+            ->whereIn('status', ['open', 'in_progress'])
+            ->limit(5)
+            ->get();
+
+        return Response::json([
+            'total' => $total,
+            'open' => $open,
+            'in_progress' => $inProgress,
+            'resolved_today' => $resolvedToday,
+            'recent_tickets' => $recentTickets
+        ]);
+    }
+
     public function adminShow($id)
     {
         $this->ensureAdmin();

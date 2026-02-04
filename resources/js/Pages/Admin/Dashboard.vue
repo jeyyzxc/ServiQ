@@ -8,7 +8,7 @@ import { useToast } from 'vue-toastification';
 
 const toast = useToast();
 const loading = ref(true);
-const stats = ref({ total: 0, open: 0, in_progress: 0, resolved: 0 });
+const stats = ref({ total: 0, open: 0, in_progress: 0, resolved_today: 0 });
 const recentTickets = ref([]);
 
 const priorityColors = {
@@ -19,22 +19,22 @@ const priorityColors = {
 
 onMounted(async () => {
     try {
-        const { data } = await axios.get('/admin/api/tickets/queue');
-        recentTickets.value = data.slice(0, 5);
-        stats.value.total = data.length;
-        stats.value.open = data.filter(t => t.status === 'open').length;
-        stats.value.in_progress = data.filter(t => t.status === 'in_progress').length;
-        stats.value.resolved = 0;
+        const { data } = await axios.get('/admin/api/dashboard/stats');
+        stats.value.total = data.total;
+        stats.value.open = data.open;
+        stats.value.in_progress = data.in_progress;
+        stats.value.resolved_today = data.resolved_today;
+        recentTickets.value = data.recent_tickets;
 
         const ctx = document.getElementById('statusChart');
         if (ctx) {
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Open', 'In Progress', 'Resolved'],
+                    labels: ['Open', 'In Progress'],
                     datasets: [{
-                        data: [stats.value.open, stats.value.in_progress, stats.value.resolved],
-                        backgroundColor: ['#3B82F6', '#F59E0B', '#10B981'],
+                        data: [stats.value.open, stats.value.in_progress],
+                        backgroundColor: ['#3B82F6', '#F59E0B'],
                         borderWidth: 0,
                         borderRadius: 4
                     }]
@@ -124,7 +124,7 @@ function formatDate(date) {
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-slate-500">Resolved Today</p>
-                        <p class="text-3xl font-bold text-emerald-600 mt-1">{{ stats.resolved }}</p>
+                        <p class="text-3xl font-bold text-emerald-600 mt-1">{{ stats.resolved_today }}</p>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
                         <svg class="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -132,8 +132,9 @@ function formatDate(date) {
                         </svg>
                     </div>
                 </div>
-                <div class="mt-4 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-emerald-500 rounded-full w-0"></div>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-emerald-600 font-medium">Completed</span>
+                    <span class="text-slate-400 ml-2">tickets resolved today</span>
                 </div>
             </div>
         </div>
