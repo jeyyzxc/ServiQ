@@ -6,19 +6,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/debug', function () {
-    return response()->json([
-        'status' => 'ok',
-        'laravel' => Application::VERSION,
-        'php' => PHP_VERSION,
-        'env' => app()->environment(),
-        'db' => \DB::connection()->getDatabaseName(),
-    ]);
-});
-
-Route::get('/health', function () {
-    return response('OK', 200);
-});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
