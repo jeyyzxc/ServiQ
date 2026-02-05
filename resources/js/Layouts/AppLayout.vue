@@ -184,6 +184,19 @@ function logout() {
                                             <span class="text-xs font-bold text-white">Administrator Access</span>
                                         </div>
                                     </div>
+                                    <div class="p-2">
+                                        <Link :href="route('profile.edit')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors group">
+                                            <div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                                                <svg class="w-5 h-5 text-slate-500 group-hover:text-indigo-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-semibold">Profile Settings</p>
+                                                <p class="text-xs text-slate-500">Manage your account</p>
+                                            </div>
+                                        </Link>
+                                    </div>
                                     <div class="p-2 border-t border-slate-100">
                                         <button @click="logout" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 transition-colors group">
                                             <div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-colors">
