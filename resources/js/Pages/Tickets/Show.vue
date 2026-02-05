@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useToast } from 'vue-toastification';
 
@@ -28,64 +28,38 @@ const statusSteps = [
     { key: 'resolved', label: 'Resolved', icon: '✅' }
 ];
 
-function hasReachedStatus(statusKey) {
-    if (!ticket.value.logs || ticket.value.logs.length === 0) {
-        return statusKey === 'open';
-    }
+const statusOrder = ['open', 'in_progress', 'resolved'];
 
-    if (statusKey === 'open') {
-        return ticket.value.logs.some(log => log.to_status === 'open') ||
-               ticket.value.status === 'open' ||
-               ticket.value.status === 'in_progress' ||
-               ticket.value.status === 'resolved';
-    }
-
-    if (statusKey === 'in_progress') {
-        return ticket.value.logs.some(log => log.to_status === 'in_progress') ||
-               ticket.value.status === 'in_progress' ||
-               ticket.value.status === 'resolved';
-    }
-
-    if (statusKey === 'resolved') {
-        return ticket.value.logs.some(log => log.to_status === 'resolved') ||
-               ticket.value.status === 'resolved';
-    }
-
-    return false;
+function getStatusIndex(status) {
+    return statusOrder.indexOf(status);
 }
 
+
 function getStepStatus(stepKey) {
-    const isCurrentStatus = ticket.value.status === stepKey;
-    const hasReached = hasReachedStatus(stepKey);
+    const currentStatus = ticket.value.status;
+    const stepIndex = getStatusIndex(stepKey);
+    const currentIndex = getStatusIndex(currentStatus);
 
-    if (stepKey === 'open') {
-        if (ticket.value.status === 'in_progress' || ticket.value.status === 'resolved') {
-            return 'complete';
-        }
-        return isCurrentStatus ? 'current' : 'upcoming';
+    if (currentStatus === 'resolved') {
+        return 'complete';
     }
 
-    if (stepKey === 'in_progress') {
-        if (ticket.value.status === 'resolved' && hasReached) {
-            return 'complete';
-        }
-        if (isCurrentStatus) {
-            return 'current';
-        }
-        if (hasReached) {
-            return 'complete';
-        }
-        return 'upcoming';
+    if (stepIndex < currentIndex) {
+        return 'complete';
     }
 
-    if (stepKey === 'resolved') {
-        if (isCurrentStatus || hasReached) {
-            return 'complete';
-        }
-        return 'upcoming';
+    if (stepIndex === currentIndex) {
+        return 'current';
     }
 
     return 'upcoming';
+}
+
+function getProgressWidth() {
+    const currentStatus = ticket.value.status;
+    if (currentStatus === 'resolved') return '100%';
+    if (currentStatus === 'in_progress') return '50%';
+    return '0%';
 }
 
 async function load() {
@@ -107,7 +81,8 @@ onMounted(() => {
     load();
     if (window.Echo) {
         window.Echo.private('tickets').listen('TicketStatusChanged', (e) => {
-            if ((e.ticket_id || e.ticket?.id) == props.ticketId) {
+            const eventTicketId = String(e.ticket_id || e.ticket?.id);
+            if (eventTicketId === String(props.ticketId)) {
                 load();
                 toast.info('Your ticket status has been updated');
             }
@@ -176,10 +151,10 @@ onMounted(() => {
                         <div class="absolute top-5 left-0 right-0 h-0.5 bg-slate-200"></div>
                         <div
                             class="absolute top-5 left-0 h-0.5 bg-emerald-500 transition-all duration-500"
-                            :style="{ width: ticket.status === 'resolved' ? '100%' : ticket.status === 'in_progress' ? '50%' : '0%' }"
+                            :style="{ width: getProgressWidth() }"
                         ></div>
                         <div class="relative flex justify-between">
-                            <div v-for="(step, index) in statusSteps" :key="step.key" class="flex flex-col items-center">
+                            <div v-for="step in statusSteps" :key="step.key" class="flex flex-col items-center">
                                 <div :class="[
                                     getStepStatus(step.key) === 'complete' ? 'bg-emerald-500 text-white' :
                                     getStepStatus(step.key) === 'current' ? 'bg-indigo-500 text-white ring-4 ring-indigo-100' :

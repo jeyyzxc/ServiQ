@@ -135,6 +135,8 @@ class TicketController extends Controller
     {
         $this->ensureAdmin();
         $ticket = Ticket::with('logs.user')->findOrFail($id);
+        $this->service->markAsViewed($ticket, Auth::user());
+        $ticket->load('logs.user');
         return Response::json($ticket);
     }
 
