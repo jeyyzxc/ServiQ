@@ -57,7 +57,10 @@ class TicketController extends Controller
             if (!$user) {
                 return Response::json(['error' => 'Unauthenticated'], 401);
             }
-            $tickets = Ticket::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+            $tickets = Ticket::with('logs')
+                ->where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
             return Response::json($tickets);
         } catch (\Exception $e) {
             return Response::json(['error' => 'Failed to load tickets: ' . $e->getMessage()], 500);
@@ -74,7 +77,7 @@ class TicketController extends Controller
     public function adminQueue()
     {
         $this->ensureAdmin();
-        $tickets = Ticket::ordered()->whereIn('status', ['open', 'in_progress'])->get();
+        $tickets = Ticket::with('user')->ordered()->whereIn('status', ['open', 'in_progress'])->get();
         return Response::json($tickets);
     }
 
@@ -91,7 +94,8 @@ class TicketController extends Controller
             ->distinct('ticket_id')
             ->count('ticket_id');
 
-        $recentTickets = Ticket::ordered()
+        $recentTickets = Ticket::with('user')
+            ->ordered()
             ->whereIn('status', ['open', 'in_progress'])
             ->limit(5)
             ->get();
