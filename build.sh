@@ -22,6 +22,15 @@ npm ci --prefer-offline --no-audit
 echo "Building frontend assets..."
 npm run build
 
+echo "Verifying build output..."
+if [ ! -f "public/build/manifest.json" ]; then
+    echo "ERROR: Vite manifest not found!"
+    ls -la public/build/ || echo "build directory not found"
+    exit 1
+fi
+echo "Build manifest found:"
+cat public/build/manifest.json
+
 echo "Ensuring directories exist..."
 mkdir -p database
 mkdir -p storage/framework/{sessions,views,cache}
@@ -46,5 +55,8 @@ php artisan view:cache || echo "View cache failed"
 
 echo "Setting permissions..."
 chmod -R 777 storage bootstrap/cache database
+
+echo "Testing Laravel bootstrap..."
+php artisan --version || echo "Laravel check failed"
 
 echo "Deployment complete!"
