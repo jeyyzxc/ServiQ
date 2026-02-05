@@ -142,3 +142,4 @@ const gradientColors = computed(() => {
         </div>
     </div>
 </template>
+

@@ -40,3 +40,4 @@ class User extends Authenticatable
         return (bool)$this->is_admin;
     }
 }
+

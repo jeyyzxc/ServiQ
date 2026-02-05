@@ -24,3 +24,4 @@ class PasswordController extends Controller
         return back();
     }
 }
+

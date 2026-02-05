@@ -50,3 +50,4 @@ class NewPasswordController extends Controller
         ]);
     }
 }
+

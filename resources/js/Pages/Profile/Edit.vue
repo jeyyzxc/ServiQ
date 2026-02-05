@@ -312,3 +312,4 @@ const deleteAccount = () => {
         </div>
     </AppLayout>
 </template>
+

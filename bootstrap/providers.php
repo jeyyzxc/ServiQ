@@ -5,3 +5,4 @@ return [
     Illuminate\Broadcasting\BroadcastServiceProvider::class,
     BeyondCode\LaravelWebSockets\WebSocketsServiceProvider::class,
 ];
+

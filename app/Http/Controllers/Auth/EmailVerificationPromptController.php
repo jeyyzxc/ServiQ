@@ -17,3 +17,4 @@ class EmailVerificationPromptController extends Controller
                     : Inertia::render('Auth/VerifyEmail', ['status' => session('status')]);
     }
 }
+

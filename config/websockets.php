@@ -28,3 +28,4 @@ return [
         env('APP_URL'),
     ],
 ];
+

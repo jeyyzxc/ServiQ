@@ -245,3 +245,4 @@ const isAdmin = computed(() => page.props.auth?.user?.is_admin);
         </div>
     </div>
 </template>
+
