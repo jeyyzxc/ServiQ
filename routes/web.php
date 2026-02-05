@@ -66,6 +66,10 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
             return Inertia::render('Admin/Queue');
         })->name('admin.tickets.queue');
 
+        Route::get('/tickets/details', function () {
+            return Inertia::render('Admin/TicketDetailsList');
+        })->name('admin.tickets.details');
+
         Route::get('/tickets/logs', [App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('admin.tickets.logs');
         Route::get('/tickets/logs/export', [App\Http\Controllers\Admin\ActivityLogController::class, 'export'])->name('admin.activity-logs.export');
 
@@ -74,6 +78,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         })->name('admin.tickets.show');
 
         Route::get('/api/tickets/queue', [TicketController::class, 'adminQueue'])->name('api.admin.tickets.queue');
+        Route::get('/api/tickets/all', [TicketController::class, 'adminAllTickets'])->name('api.admin.tickets.all');
         Route::get('/api/dashboard/stats', [TicketController::class, 'adminDashboardStats'])->name('api.admin.dashboard.stats');
         Route::get('/api/tickets/logs/export', [TicketController::class, 'exportLogs'])->name('api.admin.tickets.export');
         Route::post('/api/tickets/{id}/status', [TicketController::class, 'adminChangeStatus'])->name('api.admin.tickets.status');

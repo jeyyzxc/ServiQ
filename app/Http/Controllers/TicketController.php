@@ -81,6 +81,15 @@ class TicketController extends Controller
         return Response::json($tickets);
     }
 
+    public function adminAllTickets()
+    {
+        $this->ensureAdmin();
+        $tickets = Ticket::with(['user', 'logs.user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return Response::json($tickets);
+    }
+
     public function adminDashboardStats()
     {
         $this->ensureAdmin();
