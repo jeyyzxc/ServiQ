@@ -35,29 +35,6 @@ const submit = () => {
         :subtitle="isAdminLogin ? 'Sign in to access the admin dashboard' : 'Sign in to your account to continue'"
         :isAdmin="isAdminLogin">
 
-        <div v-if="isAdminLogin" class="mb-6">
-            <div class="p-5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 shadow-lg shadow-amber-500/30">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-lg font-extrabold text-white">Admin Login</p>
-                        <p class="text-sm text-amber-100">This portal is restricted to system administrators only</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-3 p-3 rounded-xl bg-red-50 border border-red-200">
-                <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                    </svg>
-                    <p class="text-xs font-semibold text-red-700">Unauthorized access attempts will be logged</p>
-                </div>
-            </div>
-        </div>
 
         <div v-if="status" class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200">
             <div class="flex items-center gap-3">
