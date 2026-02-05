@@ -61,7 +61,7 @@ const submit = () => {
                         required
                         autofocus
                         autocomplete="username"
-                        class="block w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200"
+                        class="block w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-200"
                         :class="{ 'border-red-300 focus:border-red-500 focus:ring-red-500/10': form.errors.email }"
                         placeholder="you@example.com"
                     />
@@ -88,7 +88,7 @@ const submit = () => {
                         v-model="form.password"
                         required
                         autocomplete="current-password"
-                        class="block w-full pl-12 pr-14 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200"
+                        class="block w-full pl-12 pr-14 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all duration-200"
                         :class="{ 'border-red-300 focus:border-red-500 focus:ring-red-500/10': form.errors.password }"
                         placeholder="Enter your password"
                     />
@@ -116,14 +116,14 @@ const submit = () => {
                 <label class="flex items-center cursor-pointer group">
                     <div class="relative">
                         <input type="checkbox" v-model="form.remember" class="sr-only peer" />
-                        <div class="w-5 h-5 rounded-md border-2 border-slate-300 bg-white peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-all"></div>
+                        <div class="w-5 h-5 rounded-md border-2 border-slate-300 bg-white peer-checked:bg-cyan-600 peer-checked:border-cyan-600 transition-all"></div>
                         <svg class="w-3 h-3 text-white absolute top-1 left-1 opacity-0 peer-checked:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
                     </div>
                     <span class="ml-3 text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Remember me</span>
                 </label>
-                <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm font-semibold text-cyan-600 hover:text-cyan-700 transition-colors">
                     Forgot password?
                 </Link>
             </div>
@@ -134,8 +134,8 @@ const submit = () => {
                 :class="[
                     'relative w-full flex justify-center items-center py-4 px-6 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]',
                     isAdminLogin
-                        ? 'text-white bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-amber-500/30 hover:shadow-amber-500/40'
-                        : 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-indigo-500/30 hover:shadow-indigo-500/40'
+                        ? 'text-white bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 shadow-blue-500/30 hover:shadow-blue-500/40'
+                        : 'text-white bg-gradient-to-r from-cyan-500 to-sky-600 hover:from-cyan-600 hover:to-sky-700 shadow-cyan-500/30 hover:shadow-cyan-500/40'
                 ]"
             >
                 <svg v-if="form.processing" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
