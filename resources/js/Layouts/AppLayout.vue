@@ -9,7 +9,6 @@ const flash = computed(() => page.props.flash);
 
 const sidebarOpen = ref(false);
 const dropdownOpen = ref(false);
-const notificationOpen = ref(false);
 const sessionTime = ref('');
 const currentDate = ref('');
 const showFlash = ref(false);
@@ -48,11 +47,6 @@ onMounted(() => {
 function logout() {
     router.post(route('logout'));
 }
-
-function closeSidebar() {
-    sidebarOpen.value = false;
-}
-
 </script>
 
 <template>
@@ -121,67 +115,120 @@ function closeSidebar() {
             </div>
         </aside>
 
-        <div class="lg:pl-72">
-            <header class="sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-slate-200/60 shadow-sm">
-                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-                    <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-
-                    <div class="flex items-center space-x-4">
-                        <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div class="lg:pl-80">
+            <header class="sticky top-0 z-30">
+                <div class="absolute inset-0 bg-white/80 backdrop-blur-xl border-b border-slate-200/60"></div>
+                <div class="relative flex items-center justify-between h-20 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center gap-4">
+                        <button @click="sidebarOpen = true" class="lg:hidden p-2.5 rounded-xl bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition-all active:scale-95">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
-                            <span class="font-medium">{{ sessionTime }}</span>
+                        </button>
+                        <div class="hidden lg:flex items-center">
+                            <div class="flex items-center gap-3 px-4 py-2 rounded-2xl bg-gradient-to-r from-slate-50 to-white border border-slate-200/80 shadow-sm">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span class="text-sm font-semibold text-slate-600">{{ currentDate }}</span>
+                                </div>
+                                <div class="w-px h-4 bg-slate-200"></div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span class="text-sm font-bold text-slate-800">{{ sessionTime }}</span>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="font-medium">Secure</span>
+                    </div>
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                            </span>
+                            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wide">Online</span>
                         </div>
-
+                        <button class="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-all">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                        <button class="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-all relative">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                        </button>
+                        <div class="w-px h-8 bg-slate-200 hidden sm:block"></div>
                         <div class="relative">
-                            <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 p-2 rounded-xl hover:bg-slate-100 transition-colors">
-                                <div :class="['w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold shadow-lg', isAdmin ? 'bg-gradient-to-br from-amber-500 to-orange-600' : 'bg-gradient-to-br from-indigo-500 to-purple-600']">
+                            <button @click="dropdownOpen = !dropdownOpen" class="flex items-center gap-3 p-1.5 pr-3 rounded-2xl hover:bg-slate-100 transition-all group">
+                                <div :class="['relative w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-lg ring-2 ring-white', isAdmin ? 'bg-gradient-to-br from-amber-500 to-orange-600' : 'bg-gradient-to-br from-indigo-500 to-purple-600']">
+                                    <span class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></span>
                                     {{ user?.name?.charAt(0).toUpperCase() }}
                                 </div>
-                                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="hidden sm:block text-left">
+                                    <p class="text-sm font-bold text-slate-800 group-hover:text-slate-900">{{ user?.name?.split(' ')[0] }}</p>
+                                    <p :class="['text-xs font-medium', isAdmin ? 'text-amber-600' : 'text-slate-500']">{{ isAdmin ? 'Admin' : 'User' }}</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform" :class="{ 'rotate-180': dropdownOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
-
-                            <div v-if="dropdownOpen" class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 transform origin-top-right transition-all">
-                                <div class="px-4 py-3 border-b border-slate-100">
-                                    <p class="text-sm font-semibold text-slate-900">{{ user?.name }}</p>
-                                    <p class="text-xs text-slate-500 mt-0.5">{{ user?.email }}</p>
-                                    <span v-if="isAdmin" class="inline-block mt-2 px-2 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-lg">ADMIN</span>
+                            <Transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 scale-95 -translate-y-2" enter-to-class="opacity-100 scale-100 translate-y-0" leave-active-class="transition ease-in duration-150" leave-from-class="opacity-100 scale-100 translate-y-0" leave-to-class="opacity-0 scale-95 -translate-y-2">
+                                <div v-if="dropdownOpen" class="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden z-50">
+                                    <div class="p-4 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
+                                        <div class="flex items-center gap-3">
+                                            <div :class="['w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg', isAdmin ? 'bg-gradient-to-br from-amber-500 to-orange-600' : 'bg-gradient-to-br from-indigo-500 to-purple-600']">
+                                                {{ user?.name?.charAt(0).toUpperCase() }}
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-bold text-slate-900 truncate">{{ user?.name }}</p>
+                                                <p class="text-xs text-slate-500 truncate">{{ user?.email }}</p>
+                                            </div>
+                                        </div>
+                                        <div v-if="isAdmin" class="mt-3 flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
+                                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span class="text-xs font-bold text-white">Administrator Access</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-2">
+                                        <Link :href="route('profile.edit')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors group">
+                                            <div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                                                <svg class="w-5 h-5 text-slate-500 group-hover:text-indigo-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-semibold">Profile Settings</p>
+                                                <p class="text-xs text-slate-500">Manage your account</p>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                    <div class="p-2 border-t border-slate-100">
+                                        <button @click="logout" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 transition-colors group">
+                                            <div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-colors">
+                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                </svg>
+                                            </div>
+                                            <div class="text-left">
+                                                <p class="text-sm font-semibold">Sign Out</p>
+                                                <p class="text-xs text-red-400">End your session</p>
+                                            </div>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="py-2">
-                                    <Link :href="route('profile.edit')" class="flex items-center px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
-                                        <svg class="w-5 h-5 mr-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                        Profile Settings
-                                    </Link>
-                                </div>
-                                <div class="border-t border-slate-100 pt-2">
-                                    <button @click="logout" class="flex items-center w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                                        <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                        Sign Out
-                                    </button>
-                                </div>
-                            </div>
+                            </Transition>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <main class="p-4 sm:p-6 lg:p-8">
+            <main class="p-6 sm:p-8 lg:p-10">
                 <div v-if="showFlash && (flash?.error || flash?.warning)" class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200">
                     <div class="flex items-center">
                         <svg class="w-5 h-5 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
