@@ -155,14 +155,20 @@ onMounted(() => {
                         ></div>
                         <div class="relative flex justify-between">
                             <div v-for="step in statusSteps" :key="step.key" class="flex flex-col items-center">
-                                <div :class="[
-                                    getStepStatus(step.key) === 'complete' ? 'bg-emerald-500 text-white' :
-                                    getStepStatus(step.key) === 'current' ? 'bg-indigo-500 text-white ring-4 ring-indigo-100' :
-                                    'bg-slate-200 text-slate-400',
-                                    'w-10 h-10 rounded-full flex items-center justify-center text-lg relative z-10'
-                                ]">
-                                    <span v-if="getStepStatus(step.key) === 'complete'">✓</span>
-                                    <span v-else>{{ step.icon }}</span>
+                                <div class="relative">
+                                    <div v-if="getStepStatus(step.key) === 'current'" class="absolute inset-0 rounded-full bg-indigo-400 animate-ping opacity-75"></div>
+                                    <div :class="[
+                                        getStepStatus(step.key) === 'complete' ? 'bg-emerald-500 text-white' :
+                                        getStepStatus(step.key) === 'current' ? 'bg-indigo-500 text-white ring-4 ring-indigo-100' :
+                                        'bg-slate-200 text-slate-400',
+                                        'w-10 h-10 rounded-full flex items-center justify-center text-lg relative z-10'
+                                    ]">
+                                        <svg v-if="step.key === 'resolved' && ticket.status === 'resolved'" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                        </svg>
+                                        <span v-else-if="getStepStatus(step.key) === 'complete'">✓</span>
+                                        <span v-else>{{ step.icon }}</span>
+                                    </div>
                                 </div>
                                 <p :class="[
                                     getStepStatus(step.key) === 'complete' ? 'text-emerald-600 font-semibold' :
@@ -170,6 +176,13 @@ onMounted(() => {
                                     'text-slate-500',
                                     'mt-2 text-sm'
                                 ]">{{ step.label }}</p>
+                                <span v-if="getStepStatus(step.key) === 'current'" class="mt-1 px-2 py-0.5 bg-indigo-100 text-indigo-600 text-xs font-medium rounded-full animate-pulse">Current</span>
+                                <span v-if="step.key === 'resolved' && ticket.status === 'resolved'" class="mt-1 px-2 py-0.5 bg-emerald-100 text-emerald-600 text-xs font-medium rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    Complete
+                                </span>
                             </div>
                         </div>
                     </div>
