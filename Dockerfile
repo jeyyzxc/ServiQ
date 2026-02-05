@@ -25,13 +25,22 @@ RUN docker-php-ext-install pdo pdo_sqlite mbstring exif pcntl bcmath gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+COPY package*.json /app/
+RUN npm ci
+
 COPY . /app
 
 RUN composer install --optimize-autoloader --no-dev
 
 RUN rm -rf bootstrap/cache/*.php || true
 
-RUN npm ci && npm run build
+RUN echo "Building frontend assets..." && \
+    npm run build && \
+    echo "Verifying build output..." && \
+    ls -la public/build/ && \
+    cat public/build/manifest.json | head -20
+
+RUN test -f public/build/manifest.json || (echo "ERROR: Vite manifest not found!" && exit 1)
 
 RUN mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite && chmod 777 database
 
@@ -48,7 +57,7 @@ RUN php artisan migrate --force || true
 
 RUN php artisan db:seed --force || true
 
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache /app/database
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache /app/database /app/public/build
 
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh

@@ -30,5 +30,4 @@ services:
         value: file
       - key: QUEUE_CONNECTION
         value: sync
-    buildCommand: bash build.sh
     startCommand: bash start.sh
