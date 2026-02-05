@@ -94,7 +94,7 @@ onMounted(() => {
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                             <div>
                                 <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-sm font-bold text-slate-400">#{{ ticket.id }}</span>
+                                    <span class="text-sm font-bold text-slate-400">#{{ ticket.user_ticket_number }}</span>
                                     <span :class="[statusColors[ticket.status], 'px-3 py-1 text-xs font-semibold rounded-full border capitalize']">
                                         {{ ticket.status?.replace('_', ' ') }}
                                     </span>

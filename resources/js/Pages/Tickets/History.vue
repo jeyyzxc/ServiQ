@@ -175,7 +175,7 @@ function getActionColor(log) {
                     <div v-else class="space-y-3">
                         <Link v-for="ticket in tickets" :key="ticket.id" :href="route('tickets.show', ticket.id)" class="group flex items-center gap-4 p-5 rounded-2xl border-2 border-slate-100 hover:border-indigo-200 hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 transition-all">
                             <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center text-slate-500 font-bold text-sm group-hover:from-indigo-100 group-hover:to-purple-100 group-hover:text-indigo-600 transition-colors">
-                                #{{ ticket.id }}
+                                #{{ ticket.user_ticket_number }}
                             </div>
                             <div class="flex-1 min-w-0">
                                 <h3 class="text-sm font-bold text-slate-900 truncate group-hover:text-indigo-700 transition-colors">{{ ticket.title }}</h3>

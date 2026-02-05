@@ -142,7 +142,7 @@ function getTimeAgo(date) {
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center gap-3 mb-2">
-                                    <span class="text-xs font-bold text-slate-400">#{{ ticket.id }}</span>
+                                    <span class="text-xs font-bold text-slate-400">#{{ ticket.user_ticket_number }}</span>
                                     <span :class="[statusColors[ticket.status], 'px-2.5 py-1 text-xs font-semibold rounded-lg border capitalize']">
                                         {{ ticket.status?.replace('_', ' ') }}
                                     </span>

@@ -8,6 +8,7 @@ use App\Models\TicketLog;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class TicketController extends Controller
@@ -28,21 +29,33 @@ class TicketController extends Controller
                 'category' => 'nullable|string|max:100',
             ]);
 
-            $ticket = Ticket::create([
-                'user_id' => Auth::id(),
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'category' => $data['category'] ?? null,
-                'status' => 'open',
-                'priority' => 'low',
-            ]);
+            $userId = Auth::id();
 
-            TicketLog::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => Auth::id(),
-                'from_status' => null,
-                'to_status' => 'open',
-            ]);
+            $ticket = DB::transaction(function () use ($data, $userId) {
+                $userTicketNumber = Ticket::where('user_id', $userId)
+                    ->lockForUpdate()
+                    ->max('user_ticket_number');
+                $userTicketNumber = ($userTicketNumber ?? 0) + 1;
+
+                $ticket = Ticket::create([
+                    'user_id' => $userId,
+                    'title' => $data['title'],
+                    'description' => $data['description'],
+                    'category' => $data['category'] ?? null,
+                    'status' => 'open',
+                    'priority' => 'low',
+                    'user_ticket_number' => $userTicketNumber,
+                ]);
+
+                TicketLog::create([
+                    'ticket_id' => $ticket->id,
+                    'user_id' => $userId,
+                    'from_status' => null,
+                    'to_status' => 'open',
+                ]);
+
+                return $ticket;
+            });
 
             return Response::json($ticket, 201);
         } catch (\Exception $e) {
