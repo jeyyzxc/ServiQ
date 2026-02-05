@@ -9,7 +9,7 @@ defineProps({
 });
 
 const isAdminLogin = computed(() => {
-    return window.location.pathname.includes('/admin');
+    return window.location.pathname.includes('/admin') || window.location.search.includes('admin=1');
 });
 
 const showPassword = ref(false);
