@@ -31,6 +31,11 @@ const statusSteps = [
 function getStepStatus(stepKey) {
     const currentIndex = statusSteps.findIndex(s => s.key === ticket.value.status);
     const stepIndex = statusSteps.findIndex(s => s.key === stepKey);
+
+    if (ticket.value.status === 'resolved') {
+        return 'complete';
+    }
+
     if (stepIndex < currentIndex) return 'complete';
     if (stepIndex === currentIndex) return 'current';
     return 'upcoming';
@@ -121,7 +126,7 @@ onMounted(() => {
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
                     <h2 class="text-lg font-semibold text-slate-900 mb-6">Ticket Progress</h2>
                     <div class="relative">
-                        <div class="absolute top-5 left-0 right-0 h-0.5 bg-slate-200"></div>
+                        <div :class="['absolute top-5 left-0 right-0 h-0.5', ticket.status === 'resolved' ? 'bg-emerald-500' : 'bg-slate-200']"></div>
                         <div class="relative flex justify-between">
                             <div v-for="(step, index) in statusSteps" :key="step.key" class="flex flex-col items-center">
                                 <div :class="[
@@ -134,7 +139,9 @@ onMounted(() => {
                                     <span v-else>{{ step.icon }}</span>
                                 </div>
                                 <p :class="[
-                                    getStepStatus(step.key) === 'current' ? 'text-indigo-600 font-semibold' : 'text-slate-500',
+                                    getStepStatus(step.key) === 'complete' ? 'text-emerald-600 font-semibold' :
+                                    getStepStatus(step.key) === 'current' ? 'text-indigo-600 font-semibold' :
+                                    'text-slate-500',
                                     'mt-2 text-sm'
                                 ]">{{ step.label }}</p>
                             </div>
