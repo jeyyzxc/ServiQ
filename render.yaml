@@ -4,7 +4,7 @@ services:
     runtime: docker
     plan: free
     branch: main
-    healthCheckPath: /
+    healthCheckPath: /up
     envVars:
       - key: APP_NAME
         value: ServiQ
@@ -15,7 +15,9 @@ services:
       - key: APP_DEBUG
         value: "false"
       - key: APP_URL
-        sync: false
+        value: https://serviq-wmt2.onrender.com
+      - key: ASSET_URL
+        value: https://serviq-wmt2.onrender.com
       - key: LOG_CHANNEL
         value: stack
       - key: LOG_LEVEL
@@ -28,18 +30,5 @@ services:
         value: file
       - key: QUEUE_CONNECTION
         value: sync
-    buildCommand: |
-      composer install --optimize-autoloader --no-dev
-      npm ci
-      npm run build
-      mkdir -p database
-      touch database/database.sqlite
-      chmod 777 database/database.sqlite
-      chmod 777 database
-      mkdir -p storage/framework/{sessions,views,cache}
-      mkdir -p storage/logs
-      mkdir -p bootstrap/cache
-      chmod -R 777 storage bootstrap/cache
-      php artisan migrate --force || true
-      php artisan db:seed --force || true
+    buildCommand: bash build.sh
     startCommand: bash start.sh
