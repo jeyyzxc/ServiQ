@@ -1,13 +1,15 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
 const tickets = ref([]);
 const loading = ref(true);
+const currentTime = ref(Date.now());
+let timeInterval = null;
 
 const statusColors = {
     open: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -44,24 +46,44 @@ async function setPriority(ticket, priority) {
     }
 }
 
-function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
 
 function getTimeAgo(date) {
-    const now = new Date();
-    const diff = now - new Date(date);
-    const hours = Math.floor(diff / 3600000);
-    if (hours < 1) return 'Just now';
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
+    const now = currentTime.value;
+    const past = new Date(date).getTime();
+    const diffMs = now - past;
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+
+    if (diffSeconds < 60) return 'Just now';
+    if (diffMinutes === 1) return '1 minute ago';
+    if (diffMinutes < 60) return `${diffMinutes} minutes ago`;
+    if (diffHours === 1) return '1 hour ago';
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffWeeks === 1) return '1 week ago';
+    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+    if (diffMonths === 1) return '1 month ago';
+    return `${diffMonths} months ago`;
 }
 
 onMounted(() => {
     load();
+    timeInterval = setInterval(() => {
+        currentTime.value = Date.now();
+    }, 30000);
     if (window.Echo) {
         window.Echo.private('tickets').listen('TicketStatusChanged', () => load());
+    }
+});
+
+onUnmounted(() => {
+    if (timeInterval) {
+        clearInterval(timeInterval);
     }
 });
 </script>

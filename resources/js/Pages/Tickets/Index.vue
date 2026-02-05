@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
 import { useToast } from 'vue-toastification';
 
@@ -9,6 +9,8 @@ const toast = useToast();
 const tickets = ref([]);
 const loading = ref(true);
 const filter = ref('all');
+const currentTime = ref(Date.now());
+let timeInterval = null;
 
 const statusColors = {
     open: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -37,6 +39,10 @@ onMounted(async () => {
         loading.value = false;
     }
 
+    timeInterval = setInterval(() => {
+        currentTime.value = Date.now();
+    }, 30000);
+
     if (window.Echo) {
         window.Echo.private('tickets').listen('TicketStatusChanged', (e) => {
             const id = e.ticket_id || (e.ticket && e.ticket.id);
@@ -49,8 +55,34 @@ onMounted(async () => {
     }
 });
 
-function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+onUnmounted(() => {
+    if (timeInterval) {
+        clearInterval(timeInterval);
+    }
+});
+
+function getTimeAgo(date) {
+    const now = currentTime.value;
+    const past = new Date(date).getTime();
+    const diffMs = now - past;
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+
+    if (diffSeconds < 60) return 'Just now';
+    if (diffMinutes === 1) return '1 minute ago';
+    if (diffMinutes < 60) return `${diffMinutes} minutes ago`;
+    if (diffHours === 1) return '1 hour ago';
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffWeeks === 1) return '1 week ago';
+    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+    if (diffMonths === 1) return '1 month ago';
+    return `${diffMonths} months ago`;
 }
 </script>
 
@@ -123,8 +155,8 @@ function formatDate(date) {
                             </div>
                             <div class="flex items-center gap-4">
                                 <div class="text-right">
-                                    <p class="text-xs text-slate-400">Created</p>
-                                    <p class="text-sm font-medium text-slate-600">{{ formatDate(ticket.created_at) }}</p>
+                                    <p class="text-xs text-slate-400">Submitted</p>
+                                    <p class="text-sm font-medium text-slate-600">{{ getTimeAgo(ticket.created_at) }}</p>
                                 </div>
                                 <svg class="w-5 h-5 text-slate-300 group-hover:text-indigo-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

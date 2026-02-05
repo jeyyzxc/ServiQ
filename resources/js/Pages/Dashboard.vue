@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import axios from 'axios';
 
 const page = usePage();
@@ -9,6 +9,8 @@ const user = computed(() => page.props.auth?.user);
 const tickets = ref([]);
 const loading = ref(true);
 const stats = ref({ total: 0, open: 0, in_progress: 0, resolved: 0 });
+const currentTime = ref(Date.now());
+let timeInterval = null;
 
 const statusConfig = {
     open: { color: 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white', bg: 'bg-blue-50', text: 'text-blue-600', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
@@ -29,19 +31,40 @@ onMounted(async () => {
     } finally {
         loading.value = false;
     }
+
+    timeInterval = setInterval(() => {
+        currentTime.value = Date.now();
+    }, 30000);
+});
+
+onUnmounted(() => {
+    if (timeInterval) {
+        clearInterval(timeInterval);
+    }
 });
 
 function getTimeAgo(date) {
-    const now = new Date();
-    const past = new Date(date);
+    const now = currentTime.value;
+    const past = new Date(date).getTime();
     const diffMs = now - past;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
     const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
 
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return `${diffDays}d ago`;
+    if (diffSeconds < 60) return 'Just now';
+    if (diffMinutes === 1) return '1 minute ago';
+    if (diffMinutes < 60) return `${diffMinutes} minutes ago`;
+    if (diffHours === 1) return '1 hour ago';
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffWeeks === 1) return '1 week ago';
+    if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+    if (diffMonths === 1) return '1 month ago';
+    return `${diffMonths} months ago`;
 }
 
 function getGreeting() {
