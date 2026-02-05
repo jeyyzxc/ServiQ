@@ -59,7 +59,7 @@ function logout() {
             <div class="flex flex-col h-full">
                 <div class="flex items-center justify-between h-20 px-6 border-b border-white/10">
                     <Link href="/" class="flex items-center space-x-3 group">
-                        <div :class="['w-12 h-12 rounded-2xl flex items-center justify-center shadow-2xl transform transition-transform group-hover:scale-110', isAdmin ? 'bg-gradient-to-br from-blue-500 to-emerald-500 shadow-blue-500/50' : 'bg-gradient-to-br from-cyan-400 to-sky-500 shadow-cyan-500/50']">
+                        <div :class="['w-12 h-12 rounded-2xl flex items-center justify-center shadow-2xl transform transition-transform group-hover:scale-110', isAdmin ? 'bg-gradient-to-br from-blue-400 to-emerald-400 shadow-blue-500/50' : 'bg-gradient-to-br from-cyan-400 to-sky-500 shadow-cyan-500/50']">
                             <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                             </svg>
@@ -87,7 +87,7 @@ function logout() {
                     </nav>
 
                     <nav v-if="isAdmin" class="space-y-2">
-                        <Link v-for="item in adminNavigation" :key="item.name" :href="route(item.href)" :class="['group flex items-center px-4 py-3.5 text-sm font-semibold rounded-2xl transition-all duration-200', route().current(item.href) ? 'bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-emerald-100 hover:text-white hover:bg-white/10']">
+                        <Link v-for="item in adminNavigation" :key="item.name" :href="route(item.href)" :class="['group flex items-center px-4 py-3.5 text-sm font-semibold rounded-2xl transition-all duration-200', route().current(item.href) ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white shadow-lg shadow-blue-400/30 scale-105' : 'text-emerald-100 hover:text-white hover:bg-white/10']">
                             <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon" />
                             </svg>
@@ -97,7 +97,7 @@ function logout() {
                 </div>
 
                 <div class="p-4 border-t border-white/10">
-                    <div :class="['p-4 rounded-2xl backdrop-blur-sm', isAdmin ? 'bg-emerald-900/30' : 'bg-sky-900/30']">
+                    <div :class="['p-4 rounded-2xl backdrop-blur-sm', isAdmin ? 'bg-emerald-700/30' : 'bg-sky-900/30']">
                         <div class="flex items-center space-x-3">
                             <div :class="['w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg', isAdmin ? 'bg-gradient-to-br from-blue-400 to-emerald-500' : 'bg-gradient-to-br from-cyan-400 to-sky-500']">
                                 {{ user?.name?.charAt(0).toUpperCase() }}
@@ -107,8 +107,8 @@ function logout() {
                                 <p :class="['text-xs truncate', isAdmin ? 'text-emerald-200' : 'text-cyan-200']">{{ user?.email }}</p>
                             </div>
                         </div>
-                        <div v-if="isAdmin" class="mt-3 px-3 py-1.5 bg-emerald-500/20 rounded-lg border border-emerald-500/30">
-                            <p class="text-xs font-bold text-emerald-300 text-center">ADMINISTRATOR</p>
+                        <div v-if="isAdmin" class="mt-3 px-3 py-1.5 bg-emerald-400/20 rounded-lg border border-emerald-400/30">
+                            <p class="text-xs font-bold text-emerald-200 text-center">ADMINISTRATOR</p>
                         </div>
                     </div>
                 </div>
@@ -153,13 +153,13 @@ function logout() {
                         </div>
                         <div class="relative">
                             <button @click="dropdownOpen = !dropdownOpen" class="flex items-center gap-3 p-1.5 pr-3 rounded-2xl hover:bg-slate-100 transition-all group">
-                                <div :class="['relative w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-lg ring-2 ring-white', isAdmin ? 'bg-gradient-to-br from-blue-500 to-emerald-600' : 'bg-gradient-to-br from-cyan-400 to-sky-600']">
+                                <div :class="['relative w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-lg ring-2 ring-white', isAdmin ? 'bg-gradient-to-br from-blue-400 to-emerald-400' : 'bg-gradient-to-br from-cyan-400 to-sky-600']">
                                     <span class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></span>
                                     {{ user?.name?.charAt(0).toUpperCase() }}
                                 </div>
                                 <div class="hidden sm:block text-left">
                                     <p class="text-sm font-bold text-slate-800 group-hover:text-slate-900">{{ user?.name?.split(' ')[0] }}</p>
-                                    <p :class="['text-xs font-medium', isAdmin ? 'text-emerald-600' : 'text-cyan-600']">{{ isAdmin ? 'Admin' : 'User' }}</p>
+                                    <p :class="['text-xs font-medium', isAdmin ? 'text-emerald-500' : 'text-cyan-600']">{{ isAdmin ? 'Admin' : 'User' }}</p>
                                 </div>
                                 <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform" :class="{ 'rotate-180': dropdownOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -169,7 +169,7 @@ function logout() {
                                 <div v-if="dropdownOpen" class="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden z-50">
                                     <div class="p-4 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
                                         <div class="flex items-center gap-3">
-                                            <div :class="['w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg', isAdmin ? 'bg-gradient-to-br from-blue-500 to-emerald-600' : 'bg-gradient-to-br from-cyan-400 to-sky-600']">
+                                            <div :class="['w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg', isAdmin ? 'bg-gradient-to-br from-blue-500 to-emerald-400' : 'bg-gradient-to-br from-cyan-400 to-sky-600']">
                                                 {{ user?.name?.charAt(0).toUpperCase() }}
                                             </div>
                                             <div class="flex-1 min-w-0">
@@ -177,7 +177,7 @@ function logout() {
                                                 <p class="text-xs text-slate-500 truncate">{{ user?.email }}</p>
                                             </div>
                                         </div>
-                                        <div v-if="isAdmin" class="mt-3 flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-lg">
+                                        <div v-if="isAdmin" class="mt-3 flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-emerald-400 rounded-lg">
                                             <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                             </svg>

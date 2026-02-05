@@ -10,6 +10,7 @@ const props = defineProps({
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
+const isAdmin = computed(() => user.value?.is_admin === true || user.value?.is_admin === 1);
 
 const activeTab = ref('profile');
 
@@ -62,7 +63,7 @@ const deleteAccount = () => {
         <div class="max-w-4xl mx-auto">
             <div class="mb-8">
                 <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-sky-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-cyan-500/30">
+                    <div :class="['w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg', isAdmin ? 'bg-gradient-to-br from-blue-500 to-emerald-400 shadow-blue-500/30' : 'bg-gradient-to-br from-cyan-400 to-sky-600 shadow-cyan-500/30']">
                         {{ user?.name?.charAt(0).toUpperCase() }}
                     </div>
                     <div>
@@ -72,7 +73,7 @@ const deleteAccount = () => {
                 </div>
             </div>
 
-            <div class="flex gap-2 p-1.5 bg-cyan-100 rounded-2xl w-fit mb-8">
+            <div :class="['flex gap-2 p-1.5 rounded-2xl w-fit mb-8', isAdmin ? 'bg-blue-100' : 'bg-cyan-100']">
                 <button
                     @click="activeTab = 'profile'"
                     :class="[activeTab === 'profile' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-600 hover:text-slate-900', 'px-5 py-2.5 text-sm font-semibold rounded-xl transition-all']"
@@ -89,10 +90,10 @@ const deleteAccount = () => {
 
             <div v-if="activeTab === 'profile'" class="space-y-6">
                 <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-                    <div class="px-8 py-6 border-b border-cyan-100 bg-gradient-to-r from-cyan-50 to-white">
+                    <div :class="['px-8 py-6 border-b bg-gradient-to-r to-white', isAdmin ? 'border-blue-100 from-blue-50' : 'border-cyan-100 from-cyan-50']">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div :class="['w-10 h-10 rounded-xl flex items-center justify-center', isAdmin ? 'bg-blue-100' : 'bg-cyan-100']">
+                                <svg :class="['w-5 h-5', isAdmin ? 'text-blue-600' : 'text-cyan-600']" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </div>
@@ -109,8 +110,7 @@ const deleteAccount = () => {
                                 id="name"
                                 type="text"
                                 v-model="profileForm.name"
-                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all"
-                                :class="{ 'border-red-300': profileForm.errors.name }"
+                                :class="['w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 transition-all', isAdmin ? 'focus:border-blue-500 focus:ring-blue-500/10' : 'focus:border-cyan-500 focus:ring-cyan-500/10', { 'border-red-300': profileForm.errors.name }]"
                             />
                             <p v-if="profileForm.errors.name" class="mt-2 text-sm text-red-600">{{ profileForm.errors.name }}</p>
                         </div>
@@ -120,8 +120,7 @@ const deleteAccount = () => {
                                 id="email"
                                 type="email"
                                 v-model="profileForm.email"
-                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all"
-                                :class="{ 'border-red-300': profileForm.errors.email }"
+                                :class="['w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 transition-all', isAdmin ? 'focus:border-blue-500 focus:ring-blue-500/10' : 'focus:border-cyan-500 focus:ring-cyan-500/10', { 'border-red-300': profileForm.errors.email }]"
                             />
                             <p v-if="profileForm.errors.email" class="mt-2 text-sm text-red-600">{{ profileForm.errors.email }}</p>
                         </div>
@@ -136,7 +135,7 @@ const deleteAccount = () => {
                             <button
                                 type="submit"
                                 :disabled="profileForm.processing"
-                                class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50"
+                                :class="['px-6 py-3 text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50', isAdmin ? 'bg-gradient-to-r from-blue-500 to-emerald-400 shadow-blue-500/30' : 'bg-gradient-to-r from-cyan-500 to-sky-600 shadow-cyan-500/30']"
                             >
                                 {{ profileForm.processing ? 'Saving...' : 'Save Changes' }}
                             </button>
@@ -168,10 +167,10 @@ const deleteAccount = () => {
             </div>
 
             <div v-if="activeTab === 'password'" class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-                <div class="px-8 py-6 border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white">
+                <div :class="['px-8 py-6 border-b bg-gradient-to-r to-white', isAdmin ? 'border-emerald-100 from-emerald-50' : 'border-sky-100 from-sky-50']">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div :class="['w-10 h-10 rounded-xl flex items-center justify-center', isAdmin ? 'bg-emerald-100' : 'bg-sky-100']">
+                            <svg :class="['w-5 h-5', isAdmin ? 'text-emerald-600' : 'text-sky-600']" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                         </div>
@@ -189,8 +188,7 @@ const deleteAccount = () => {
                                 id="current_password"
                                 :type="showPassword ? 'text' : 'password'"
                                 v-model="passwordForm.current_password"
-                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all pr-12"
-                                :class="{ 'border-red-300': passwordForm.errors.current_password }"
+                                :class="['w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 transition-all pr-12', isAdmin ? 'focus:border-blue-500 focus:ring-blue-500/10' : 'focus:border-cyan-500 focus:ring-cyan-500/10', { 'border-red-300': passwordForm.errors.current_password }]"
                             />
                             <button type="button" @click="showPassword = !showPassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                                 <svg v-if="!showPassword" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,8 +209,7 @@ const deleteAccount = () => {
                                 id="password"
                                 :type="showNewPassword ? 'text' : 'password'"
                                 v-model="passwordForm.password"
-                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all pr-12"
-                                :class="{ 'border-red-300': passwordForm.errors.password }"
+                                :class="['w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 transition-all pr-12', isAdmin ? 'focus:border-blue-500 focus:ring-blue-500/10' : 'focus:border-cyan-500 focus:ring-cyan-500/10', { 'border-red-300': passwordForm.errors.password }]"
                             />
                             <button type="button" @click="showNewPassword = !showNewPassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                                 <svg v-if="!showNewPassword" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -233,8 +230,7 @@ const deleteAccount = () => {
                                 id="password_confirmation"
                                 :type="showConfirmPassword ? 'text' : 'password'"
                                 v-model="passwordForm.password_confirmation"
-                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 transition-all pr-12"
-                                :class="{ 'border-red-300': passwordForm.errors.password_confirmation }"
+                                :class="['w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-4 transition-all pr-12', isAdmin ? 'focus:border-blue-500 focus:ring-blue-500/10' : 'focus:border-cyan-500 focus:ring-cyan-500/10', { 'border-red-300': passwordForm.errors.password_confirmation }]"
                             />
                             <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                                 <svg v-if="!showConfirmPassword" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -259,7 +255,7 @@ const deleteAccount = () => {
                         <button
                             type="submit"
                             :disabled="passwordForm.processing"
-                            class="px-6 py-3 bg-gradient-to-r from-sky-500 to-cyan-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/30 hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50"
+                            :class="['px-6 py-3 text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50', isAdmin ? 'bg-gradient-to-r from-emerald-500 to-blue-500 shadow-emerald-500/30' : 'bg-gradient-to-r from-sky-500 to-cyan-600 shadow-sky-500/30']"
                         >
                             {{ passwordForm.processing ? 'Updating...' : 'Update Password' }}
                         </button>
