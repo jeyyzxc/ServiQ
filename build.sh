@@ -1,7 +1,13 @@
 
 echo "Starting deployment..."
 
+echo "Clearing old cache files..."
+rm -rf bootstrap/cache/*.php || true
+
 composer install --optimize-autoloader --no-dev
+
+echo "Running package discovery..."
+php artisan package:discover --ansi || true
 
 echo "Installing npm dependencies..."
 npm ci

@@ -29,6 +29,8 @@ COPY . /app
 
 RUN composer install --optimize-autoloader --no-dev
 
+RUN rm -rf bootstrap/cache/*.php || true
+
 RUN npm ci && npm run build
 
 RUN mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite && chmod 777 database
@@ -37,6 +39,8 @@ RUN mkdir -p storage/framework/{sessions,views,cache} && \
     mkdir -p storage/logs && \
     mkdir -p bootstrap/cache && \
     chmod -R 777 storage bootstrap/cache
+
+RUN php artisan package:discover --ansi || true
 
 RUN php artisan key:generate --force || echo "APP_KEY will be set via environment"
 

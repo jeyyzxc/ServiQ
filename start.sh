@@ -8,10 +8,14 @@ export APP_URL="https://serviq-wmt2.onrender.com"
 export ASSET_URL="https://serviq-wmt2.onrender.com"
 
 echo "Clearing all caches..."
-php artisan config:clear
-php artisan cache:clear
-php artisan route:clear
-php artisan view:clear
+rm -rf bootstrap/cache/*.php
+php artisan config:clear || true
+php artisan cache:clear || true
+php artisan route:clear || true
+php artisan view:clear || true
+
+echo "Running package discovery..."
+php artisan package:discover --ansi || true
 
 echo "Checking APP_KEY..."
 if [ -z "$APP_KEY" ]; then
@@ -39,6 +43,11 @@ php artisan migrate --force || echo "Migration failed, continuing..."
 
 echo "Seeding database..."
 php artisan db:seed --force || echo "Seeding failed, continuing..."
+
+echo "Optimizing for production..."
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
 
 echo "Starting server on port ${PORT:-8000}..."
 php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
