@@ -26,6 +26,72 @@ const priorityConfig = {
 const canStartProgress = computed(() => ticket.value.status === 'open');
 const canResolve = computed(() => ticket.value.status === 'in_progress');
 
+const statusSteps = [
+    { key: 'open', label: 'Open', icon: '📋' },
+    { key: 'in_progress', label: 'In Progress', icon: '⚡' },
+    { key: 'resolved', label: 'Resolved', icon: '✅' }
+];
+
+function hasReachedStatus(statusKey) {
+    if (!ticket.value.logs || ticket.value.logs.length === 0) {
+        return statusKey === 'open';
+    }
+
+    if (statusKey === 'open') {
+        return ticket.value.logs.some(log => log.to_status === 'open') ||
+               ticket.value.status === 'open' ||
+               ticket.value.status === 'in_progress' ||
+               ticket.value.status === 'resolved';
+    }
+
+    if (statusKey === 'in_progress') {
+        return ticket.value.logs.some(log => log.to_status === 'in_progress') ||
+               ticket.value.status === 'in_progress' ||
+               ticket.value.status === 'resolved';
+    }
+
+    if (statusKey === 'resolved') {
+        return ticket.value.logs.some(log => log.to_status === 'resolved') ||
+               ticket.value.status === 'resolved';
+    }
+
+    return false;
+}
+
+function getStepStatus(stepKey) {
+    const isCurrentStatus = ticket.value.status === stepKey;
+    const hasReached = hasReachedStatus(stepKey);
+
+    if (stepKey === 'open') {
+        if (ticket.value.status === 'in_progress' || ticket.value.status === 'resolved') {
+            return 'complete';
+        }
+        return isCurrentStatus ? 'current' : 'upcoming';
+    }
+
+    if (stepKey === 'in_progress') {
+        if (ticket.value.status === 'resolved' && hasReached) {
+            return 'complete';
+        }
+        if (isCurrentStatus) {
+            return 'current';
+        }
+        if (hasReached) {
+            return 'complete';
+        }
+        return 'upcoming';
+    }
+
+    if (stepKey === 'resolved') {
+        if (isCurrentStatus || hasReached) {
+            return 'complete';
+        }
+        return 'upcoming';
+    }
+
+    return 'upcoming';
+}
+
 async function load() {
     try {
         const { data } = await axios.get(`/admin/api/tickets/${props.ticketId}`);
@@ -167,6 +233,36 @@ onMounted(() => {
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Ticket Resolved
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-6">Ticket Progress</h2>
+                    <div class="relative">
+                        <div class="absolute top-5 left-0 right-0 h-0.5 bg-slate-200"></div>
+                        <div
+                            class="absolute top-5 left-0 h-0.5 bg-emerald-500 transition-all duration-500"
+                            :style="{ width: ticket.status === 'resolved' ? '100%' : ticket.status === 'in_progress' ? '50%' : '0%' }"
+                        ></div>
+                        <div class="relative flex justify-between">
+                            <div v-for="(step, index) in statusSteps" :key="step.key" class="flex flex-col items-center">
+                                <div :class="[
+                                    getStepStatus(step.key) === 'complete' ? 'bg-emerald-500 text-white' :
+                                    getStepStatus(step.key) === 'current' ? 'bg-indigo-500 text-white ring-4 ring-indigo-100' :
+                                    'bg-slate-200 text-slate-400',
+                                    'w-10 h-10 rounded-full flex items-center justify-center text-lg relative z-10'
+                                ]">
+                                    <span v-if="getStepStatus(step.key) === 'complete'">✓</span>
+                                    <span v-else>{{ step.icon }}</span>
+                                </div>
+                                <p :class="[
+                                    getStepStatus(step.key) === 'complete' ? 'text-emerald-600 font-semibold' :
+                                    getStepStatus(step.key) === 'current' ? 'text-indigo-600 font-semibold' :
+                                    'text-slate-500',
+                                    'mt-2 text-sm'
+                                ]">{{ step.label }}</p>
                             </div>
                         </div>
                     </div>

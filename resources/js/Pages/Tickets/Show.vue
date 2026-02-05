@@ -28,16 +28,63 @@ const statusSteps = [
     { key: 'resolved', label: 'Resolved', icon: '✅' }
 ];
 
-function getStepStatus(stepKey) {
-    const currentIndex = statusSteps.findIndex(s => s.key === ticket.value.status);
-    const stepIndex = statusSteps.findIndex(s => s.key === stepKey);
-
-    if (ticket.value.status === 'resolved') {
-        return 'complete';
+function hasReachedStatus(statusKey) {
+    if (!ticket.value.logs || ticket.value.logs.length === 0) {
+        return statusKey === 'open';
     }
 
-    if (stepIndex < currentIndex) return 'complete';
-    if (stepIndex === currentIndex) return 'current';
+    if (statusKey === 'open') {
+        return ticket.value.logs.some(log => log.to_status === 'open') ||
+               ticket.value.status === 'open' ||
+               ticket.value.status === 'in_progress' ||
+               ticket.value.status === 'resolved';
+    }
+
+    if (statusKey === 'in_progress') {
+        return ticket.value.logs.some(log => log.to_status === 'in_progress') ||
+               ticket.value.status === 'in_progress' ||
+               ticket.value.status === 'resolved';
+    }
+
+    if (statusKey === 'resolved') {
+        return ticket.value.logs.some(log => log.to_status === 'resolved') ||
+               ticket.value.status === 'resolved';
+    }
+
+    return false;
+}
+
+function getStepStatus(stepKey) {
+    const isCurrentStatus = ticket.value.status === stepKey;
+    const hasReached = hasReachedStatus(stepKey);
+
+    if (stepKey === 'open') {
+        if (ticket.value.status === 'in_progress' || ticket.value.status === 'resolved') {
+            return 'complete';
+        }
+        return isCurrentStatus ? 'current' : 'upcoming';
+    }
+
+    if (stepKey === 'in_progress') {
+        if (ticket.value.status === 'resolved' && hasReached) {
+            return 'complete';
+        }
+        if (isCurrentStatus) {
+            return 'current';
+        }
+        if (hasReached) {
+            return 'complete';
+        }
+        return 'upcoming';
+    }
+
+    if (stepKey === 'resolved') {
+        if (isCurrentStatus || hasReached) {
+            return 'complete';
+        }
+        return 'upcoming';
+    }
+
     return 'upcoming';
 }
 
@@ -126,7 +173,11 @@ onMounted(() => {
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
                     <h2 class="text-lg font-semibold text-slate-900 mb-6">Ticket Progress</h2>
                     <div class="relative">
-                        <div :class="['absolute top-5 left-0 right-0 h-0.5', ticket.status === 'resolved' ? 'bg-emerald-500' : 'bg-slate-200']"></div>
+                        <div class="absolute top-5 left-0 right-0 h-0.5 bg-slate-200"></div>
+                        <div
+                            class="absolute top-5 left-0 h-0.5 bg-emerald-500 transition-all duration-500"
+                            :style="{ width: ticket.status === 'resolved' ? '100%' : ticket.status === 'in_progress' ? '50%' : '0%' }"
+                        ></div>
                         <div class="relative flex justify-between">
                             <div v-for="(step, index) in statusSteps" :key="step.key" class="flex flex-col items-center">
                                 <div :class="[
