@@ -31,14 +31,6 @@ const clearFilters = () => {
     router.get(route('admin.tickets.logs'));
 };
 
-const exportCSV = () => {
-    const params = new URLSearchParams({
-        search: search.value,
-        date_from: dateFrom.value,
-        date_to: dateTo.value,
-    });
-    window.location.href = route('admin.activity-logs.export') + '?' + params.toString();
-};
 
 const getActionBadge = (fromStatus, toStatus) => {
     if (!fromStatus || fromStatus === 'none') {
@@ -97,24 +89,15 @@ const getStatusBadge = (status) => {
 </script>
 
 <template>
-    <Head title="Activity Logs" />
+    <Head title="Ticket History Log" />
 
     <AppLayout>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Activity Logs</h1>
+                    <h1 class="text-3xl font-bold text-gray-900">Ticket History Log</h1>
                     <p class="text-gray-600 mt-2">Track all ticket status changes and actions</p>
                 </div>
-                <button
-                    @click="exportCSV"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-sm"
-                >
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Export CSV
-                </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">

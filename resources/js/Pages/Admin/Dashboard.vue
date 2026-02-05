@@ -280,7 +280,7 @@ function getTimeAgo(date) {
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <Link :href="route('admin.tickets.queue')" class="group relative overflow-hidden flex items-center p-6 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 text-white shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:scale-[1.02] transition-all">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-8 -translate-y-8"></div>
                     <div class="relative w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mr-5">
@@ -304,28 +304,13 @@ function getTimeAgo(date) {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-lg font-bold text-slate-900">Activity Logs</p>
-                        <p class="text-sm text-slate-500">View system history</p>
+                        <p class="text-lg font-bold text-slate-900">Ticket History Log</p>
+                        <p class="text-sm text-slate-500">View status change history</p>
                     </div>
                     <svg class="ml-auto w-6 h-6 text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </Link>
-
-                <a :href="route('api.admin.tickets.export')" class="group flex items-center p-6 rounded-3xl bg-white border-2 border-slate-100 shadow-xl shadow-slate-200/30 hover:border-emerald-200 hover:shadow-2xl hover:scale-[1.02] transition-all">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center mr-5 group-hover:from-emerald-100 group-hover:to-teal-100 transition-colors">
-                        <svg class="w-7 h-7 text-slate-500 group-hover:text-emerald-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-lg font-bold text-slate-900">Export Data</p>
-                        <p class="text-sm text-slate-500">Download CSV report</p>
-                    </div>
-                    <svg class="ml-auto w-6 h-6 text-slate-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
             </div>
         </div>
     </AppLayout>
