@@ -85,68 +85,86 @@ const deleteAccount = () => {
                 >
                     Password
                 </button>
-                <button
-                    @click="activeTab = 'danger'"
-                    :class="[activeTab === 'danger' ? 'bg-white shadow-sm text-red-600' : 'text-slate-600 hover:text-slate-900', 'px-5 py-2.5 text-sm font-semibold rounded-xl transition-all']"
-                >
-                    Danger Zone
-                </button>
             </div>
 
-            <div v-if="activeTab === 'profile'" class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-                <div class="px-8 py-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+            <div v-if="activeTab === 'profile'" class="space-y-6">
+                <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                    <div class="px-8 py-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-900">Profile Information</h2>
+                                <p class="text-sm text-slate-500">Update your account's profile information and email address</p>
+                            </div>
+                        </div>
+                    </div>
+                    <form @submit.prevent="updateProfile" class="p-8 space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-bold text-slate-700 mb-2">Full Name</label>
+                            <input
+                                id="name"
+                                type="text"
+                                v-model="profileForm.name"
+                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                                :class="{ 'border-red-300': profileForm.errors.name }"
+                            />
+                            <p v-if="profileForm.errors.name" class="mt-2 text-sm text-red-600">{{ profileForm.errors.name }}</p>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-slate-900">Profile Information</h2>
-                            <p class="text-sm text-slate-500">Update your account's profile information and email address</p>
+                            <label for="email" class="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
+                            <input
+                                id="email"
+                                type="email"
+                                v-model="profileForm.email"
+                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                                :class="{ 'border-red-300': profileForm.errors.email }"
+                            />
+                            <p v-if="profileForm.errors.email" class="mt-2 text-sm text-red-600">{{ profileForm.errors.email }}</p>
                         </div>
-                    </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                            <p v-if="profileForm.recentlySuccessful" class="text-sm font-medium text-emerald-600 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                Saved successfully
+                            </p>
+                            <div v-else></div>
+                            <button
+                                type="submit"
+                                :disabled="profileForm.processing"
+                                class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50"
+                            >
+                                {{ profileForm.processing ? 'Saving...' : 'Save Changes' }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <form @submit.prevent="updateProfile" class="p-8 space-y-6">
-                    <div>
-                        <label for="name" class="block text-sm font-bold text-slate-700 mb-2">Full Name</label>
-                        <input
-                            id="name"
-                            type="text"
-                            v-model="profileForm.name"
-                            class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
-                            :class="{ 'border-red-300': profileForm.errors.name }"
-                        />
-                        <p v-if="profileForm.errors.name" class="mt-2 text-sm text-red-600">{{ profileForm.errors.name }}</p>
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
-                        <input
-                            id="email"
-                            type="email"
-                            v-model="profileForm.email"
-                            class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
-                            :class="{ 'border-red-300': profileForm.errors.email }"
-                        />
-                        <p v-if="profileForm.errors.email" class="mt-2 text-sm text-red-600">{{ profileForm.errors.email }}</p>
-                    </div>
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-                        <p v-if="profileForm.recentlySuccessful" class="text-sm font-medium text-emerald-600 flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                            </svg>
-                            Saved successfully
-                        </p>
-                        <div v-else></div>
+
+                <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-red-200 overflow-hidden">
+                    <div class="p-6 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900">Delete Account</h3>
+                                <p class="text-sm text-slate-500">Permanently remove your account and all data</p>
+                            </div>
+                        </div>
                         <button
-                            type="submit"
-                            :disabled="profileForm.processing"
-                            class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50"
+                            @click="showDeleteModal = true"
+                            class="px-5 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors"
                         >
-                            {{ profileForm.processing ? 'Saving...' : 'Save Changes' }}
+                            Delete Account
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
 
             <div v-if="activeTab === 'password'" class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
@@ -249,74 +267,50 @@ const deleteAccount = () => {
                 </form>
             </div>
 
-            <div v-if="activeTab === 'danger'" class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-red-200 overflow-hidden">
-                <div class="px-8 py-6 border-b border-red-100 bg-gradient-to-r from-red-50 to-white">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-bold text-red-900">Danger Zone</h2>
-                            <p class="text-sm text-red-600">Permanently delete your account and all data</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-8">
-                    <div class="p-6 bg-red-50 rounded-2xl border border-red-200">
-                        <h3 class="text-sm font-bold text-red-900 mb-2">Delete Account</h3>
-                        <p class="text-sm text-red-700 mb-4">Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data you wish to retain.</p>
-                        <button
-                            @click="showDeleteModal = true"
-                            class="px-5 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors"
-                        >
-                            Delete Account
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
-                <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-slate-900">Confirm Deletion</h3>
-                            <p class="text-sm text-slate-500">This action cannot be undone</p>
+                <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+                    <div class="p-6 bg-gradient-to-r from-red-500 to-rose-600">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-extrabold text-white">Delete Account</h3>
+                                <p class="text-sm text-red-100">This action cannot be undone</p>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-sm text-slate-600 mb-6">Please enter your password to confirm you would like to permanently delete your account.</p>
-                    <form @submit.prevent="deleteAccount">
-                        <input
-                            type="password"
-                            v-model="deleteForm.password"
-                            placeholder="Enter your password"
-                            class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all mb-4"
-                            :class="{ 'border-red-300': deleteForm.errors.password }"
-                        />
-                        <p v-if="deleteForm.errors.password" class="text-sm text-red-600 mb-4">{{ deleteForm.errors.password }}</p>
-                        <div class="flex gap-3">
-                            <button
-                                type="button"
-                                @click="showDeleteModal = false; deleteForm.reset();"
-                                class="flex-1 px-5 py-3 bg-slate-100 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-200 transition-colors"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                :disabled="deleteForm.processing"
-                                class="flex-1 px-5 py-3 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50"
-                            >
-                                {{ deleteForm.processing ? 'Deleting...' : 'Delete Account' }}
-                            </button>
-                        </div>
-                    </form>
+                    <div class="p-6">
+                        <p class="text-sm text-slate-600 mb-6">Once your account is deleted, all of your data will be permanently removed. Please enter your password to confirm deletion.</p>
+                        <form @submit.prevent="deleteAccount">
+                            <input
+                                type="password"
+                                v-model="deleteForm.password"
+                                placeholder="Enter your password to confirm"
+                                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all mb-4"
+                                :class="{ 'border-red-300': deleteForm.errors.password }"
+                            />
+                            <p v-if="deleteForm.errors.password" class="text-sm text-red-600 mb-4">{{ deleteForm.errors.password }}</p>
+                            <div class="flex gap-3">
+                                <button
+                                    type="button"
+                                    @click="showDeleteModal = false; deleteForm.reset();"
+                                    class="flex-1 px-5 py-3.5 bg-slate-100 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-200 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    :disabled="deleteForm.processing"
+                                    class="flex-1 px-5 py-3.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50"
+                                >
+                                    {{ deleteForm.processing ? 'Deleting...' : 'Yes, Delete My Account' }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
