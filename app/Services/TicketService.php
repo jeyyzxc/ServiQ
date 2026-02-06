@@ -50,28 +50,6 @@ class TicketService
 
     public function markAsViewed(Ticket $ticket, $actor = null): Ticket
     {
-        if ($ticket->status !== 'open') {
-            return $ticket;
-        }
-
-        $hasViewedLog = TicketLog::where('ticket_id', $ticket->id)
-            ->where('to_status', 'viewed')
-            ->exists();
-
-        if ($hasViewedLog) {
-            return $ticket;
-        }
-
-        return DB::transaction(function () use ($ticket, $actor) {
-            TicketLog::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $actor ? $actor->id : null,
-                'from_status' => 'open',
-                'to_status' => 'viewed',
-            ]);
-
-            return $ticket->fresh();
-        });
+        return $ticket;
     }
 }
-
