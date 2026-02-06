@@ -5,6 +5,7 @@ import { reactive, ref, computed } from 'vue';
 import axios from 'axios';
 
 const loading = ref(false);
+const submitted = ref(false);
 const errors = ref({});
 const successMessage = ref('');
 const errorMessage = ref('');
@@ -60,6 +61,7 @@ async function submit() {
     try {
         await axios.post('/api/tickets', form);
         successMessage.value = 'Ticket created successfully! Redirecting...';
+        submitted.value = true;
         setTimeout(() => {
             router.visit(route('tickets.index'));
         }, 1500);
@@ -228,7 +230,7 @@ async function submit() {
                                 </Link>
                                 <button
                                     type="submit"
-                                    :disabled="loading || !form.title || !form.description"
+                                    :disabled="loading || submitted || !form.title || !form.description"
                                     class="inline-flex items-center px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-bold rounded-2xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -282,7 +284,7 @@ async function submit() {
                             <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
                                 <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                </svg>
+                                 </svg>
                             </div>
                             <h3 class="font-bold text-amber-900">Tips for faster resolution</h3>
                         </div>
@@ -326,5 +328,3 @@ async function submit() {
         </div>
     </AppLayout>
 </template>
-
-
