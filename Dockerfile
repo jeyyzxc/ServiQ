@@ -33,15 +33,18 @@ RUN rm -rf bootstrap/cache/*.php || true
 
 RUN echo "Node version:" && node -v && echo "NPM version:" && npm -v
 
-RUN npm ci --verbose
+RUN npm install
 
-RUN echo "=== Starting Vite Build ===" && \
-    npm run build 2>&1 && \
+RUN mkdir -p public/build && \
+    echo "=== Starting Vite Build ===" && \
+    npm run build && \
     echo "=== Vite Build Complete ===" && \
     echo "Checking public/build directory:" && \
-    ls -la public/build/ || echo "public/build directory not found!" && \
+    ls -la public/build/ && \
     echo "Checking for manifest.json:" && \
-    ls -la public/build/manifest.json || echo "manifest.json not found!"
+    cat public/build/manifest.json | head -20
+
+RUN test -f public/build/manifest.json || (echo "ERROR: Vite manifest not found!" && exit 1)
 
 RUN mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite && chmod 777 database
 

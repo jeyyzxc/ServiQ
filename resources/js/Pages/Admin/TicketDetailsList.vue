@@ -32,8 +32,11 @@ const filteredTickets = computed(() => {
             t.title.toLowerCase().includes(query) ||
             t.description.toLowerCase().includes(query) ||
             t.id.toString().includes(query) ||
+            t.user_ticket_number?.toString().includes(query) ||
             t.user?.name?.toLowerCase().includes(query) ||
-            t.user?.email?.toLowerCase().includes(query)
+            t.user?.email?.toLowerCase().includes(query) ||
+            t.status?.toLowerCase().includes(query) ||
+            t.status?.replace('_', ' ').toLowerCase().includes(query)
         );
     }
 
@@ -305,7 +308,7 @@ onMounted(async () => {
                                     <div class="bg-white rounded-xl p-4 border border-slate-200 max-h-80 overflow-y-auto">
                                         <div v-if="ticket.logs && ticket.logs.length > 0" class="space-y-3">
                                             <div
-                                                v-for="log in ticket.logs"
+                                                v-for="log in ticket.logs.slice().reverse()"
                                                 :key="log.id"
                                                 class="flex items-start gap-3 pb-3 border-b border-slate-100 last:border-0 last:pb-0"
                                             >

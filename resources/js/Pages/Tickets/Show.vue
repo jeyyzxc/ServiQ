@@ -191,7 +191,7 @@ onMounted(() => {
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
                     <h2 class="text-lg font-semibold text-slate-900 mb-4">Activity History</h2>
                     <div v-if="ticket.logs && ticket.logs.length > 0" class="space-y-4">
-                        <div v-for="(log, index) in ticket.logs" :key="log.id" class="flex gap-4">
+                        <div v-for="(log, index) in ticket.logs.slice().reverse()" :key="log.id" class="flex gap-4">
                             <div class="relative">
                                 <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                                     <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
