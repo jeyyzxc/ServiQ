@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { router, Link, Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
@@ -12,6 +12,13 @@ const props = defineProps({
 const search = ref(props.filters.search || '');
 const dateFrom = ref(props.filters.date_from || '');
 const dateTo = ref(props.filters.date_to || '');
+
+const sortedLogs = computed(() => {
+    if (props.logs && props.logs.data) {
+        return props.logs.data.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+    return [];
+});
 
 const applyFilters = () => {
     router.get(route('admin.tickets.logs'), {
@@ -221,9 +228,9 @@ const getStatusBadge = (status) => {
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div v-if="logs.data.length > 0" class="divide-y divide-gray-200">
+                <div v-if="sortedLogs.length > 0" class="divide-y divide-gray-200">
                     <div
-                        v-for="log in logs.data"
+                        v-for="log in sortedLogs"
                         :key="log.id"
                         class="p-6 hover:bg-gray-50 transition-colors"
                     >
@@ -334,4 +341,3 @@ const getStatusBadge = (status) => {
         </div>
     </AppLayout>
 </template>
-

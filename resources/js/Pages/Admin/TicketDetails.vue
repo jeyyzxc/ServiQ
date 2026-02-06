@@ -26,6 +26,23 @@ const priorityConfig = {
 const canStartProgress = computed(() => ticket.value.status === 'open');
 const canResolve = computed(() => ticket.value.status === 'in_progress');
 
+const sortedLogs = computed(() => {
+    if (ticket.value.logs) {
+        return ticket.value.logs.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+    return [];
+});
+
+function formatLogMessage(log) {
+    const from = log.from_status || 'none';
+    const to = log.to_status;
+
+    if (from.startsWith('priority:') && to.startsWith('priority:')) {
+        return `changed priority from ${from.replace('priority:', '')} to ${to.replace('priority:', '')}`;
+    }
+
+    return `changed status from ${from} to ${to}`;
+}
 
 async function load() {
     try {
@@ -176,21 +193,20 @@ onMounted(() => {
 
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
                     <h2 class="text-lg font-semibold text-slate-900 mb-4">Activity History</h2>
-                    <div v-if="ticket.logs && ticket.logs.length > 0" class="space-y-4">
-                        <div v-for="(log, index) in ticket.logs" :key="log.id" class="flex gap-4">
+                    <div v-if="sortedLogs.length > 0" class="space-y-4">
+                        <div v-for="(log, index) in sortedLogs" :key="log.id" class="flex gap-4">
                             <div class="relative">
                                 <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                                     <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
-                                <div v-if="index !== ticket.logs.length - 1" class="absolute top-8 left-4 w-0.5 h-full bg-slate-200"></div>
+                                <div v-if="index !== sortedLogs.length - 1" class="absolute top-8 left-4 w-0.5 h-full bg-slate-200"></div>
                             </div>
                             <div class="flex-1 pb-4">
                                 <p class="text-sm text-slate-600">
                                     <span class="font-semibold text-slate-900">{{ log.user?.name || 'System' }}</span>
-                                    changed status from <span class="font-semibold">{{ log.from_status || 'none' }}</span>
-                                    to <span class="font-semibold">{{ log.to_status }}</span>
+                                    {{ formatLogMessage(log) }}
                                 </p>
                                 <p class="text-xs text-slate-400 mt-1">{{ formatDate(log.created_at) }}</p>
                             </div>
@@ -202,4 +218,3 @@ onMounted(() => {
         </div>
     </AppLayout>
 </template>
-

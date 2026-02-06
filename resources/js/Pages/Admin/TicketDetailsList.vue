@@ -86,6 +86,21 @@ function formatStatus(status) {
     return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
+function formatLogMessage(log) {
+    const from = log.from_status || 'none';
+    const to = log.to_status;
+
+    if (from.startsWith('priority:') && to.startsWith('priority:')) {
+        return `Priority: ${from.replace('priority:', '')} → ${to.replace('priority:', '')}`;
+    }
+
+    if (!from || from === 'none') {
+        return 'Ticket Created';
+    }
+
+    return `Status: ${formatStatus(from)} → ${formatStatus(to)}`;
+}
+
 function toggleExpand(ticketId) {
     expandedTicket.value = expandedTicket.value === ticketId ? null : ticketId;
 }
@@ -350,7 +365,7 @@ onMounted(async () => {
                                                 </div>
                                                 <div class="flex-1 min-w-0">
                                                     <p class="text-sm font-medium text-slate-900">
-                                                        {{ !log.from_status || log.from_status === 'none' ? 'Ticket Created' : `Status: ${formatStatus(log.from_status)} → ${formatStatus(log.to_status)}` }}
+                                                        {{ formatLogMessage(log) }}
                                                     </p>
                                                     <p class="text-xs text-slate-500 mt-0.5">
                                                         by {{ log.user?.name || 'System' }} • {{ formatDate(log.created_at) }}
@@ -384,4 +399,3 @@ onMounted(async () => {
         </div>
     </AppLayout>
 </template>
-
