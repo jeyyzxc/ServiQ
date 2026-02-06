@@ -25,12 +25,28 @@ class ActivityLogController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where(function($q) use ($request) {
-                $q->whereHas('ticket', function($tq) use ($request) {
+            $searchTerm = strtolower($request->search);
+            $ticketIdFromSearch = null;
+
+            if (preg_match('/^ticket\s*#?\s*(\d+)$/i', $searchTerm, $matches)) {
+                $ticketIdFromSearch = (int) $matches[1];
+            } elseif (preg_match('/^#?\s*(\d+)$/', $searchTerm, $matches)) {
+                $ticketIdFromSearch = (int) $matches[1];
+            }
+
+            $query->where(function($q) use ($request, $ticketIdFromSearch) {
+                $q->whereHas('ticket', function($tq) use ($request, $ticketIdFromSearch) {
                     $tq->where('title', 'like', "%{$request->search}%");
+                    if ($ticketIdFromSearch !== null) {
+                        $tq->orWhere('id', $ticketIdFromSearch);
+                    }
                 })
                 ->orWhere('from_status', 'like', "%{$request->search}%")
                 ->orWhere('to_status', 'like', "%{$request->search}%");
+
+                if ($ticketIdFromSearch !== null) {
+                    $q->orWhere('ticket_id', $ticketIdFromSearch);
+                }
             });
         }
 
@@ -92,12 +108,28 @@ class ActivityLogController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where(function($q) use ($request) {
-                $q->whereHas('ticket', function($tq) use ($request) {
+            $searchTerm = strtolower($request->search);
+            $ticketIdFromSearch = null;
+
+            if (preg_match('/^ticket\s*#?\s*(\d+)$/i', $searchTerm, $matches)) {
+                $ticketIdFromSearch = (int) $matches[1];
+            } elseif (preg_match('/^#?\s*(\d+)$/', $searchTerm, $matches)) {
+                $ticketIdFromSearch = (int) $matches[1];
+            }
+
+            $query->where(function($q) use ($request, $ticketIdFromSearch) {
+                $q->whereHas('ticket', function($tq) use ($request, $ticketIdFromSearch) {
                     $tq->where('title', 'like', "%{$request->search}%");
+                    if ($ticketIdFromSearch !== null) {
+                        $tq->orWhere('id', $ticketIdFromSearch);
+                    }
                 })
                 ->orWhere('from_status', 'like', "%{$request->search}%")
                 ->orWhere('to_status', 'like', "%{$request->search}%");
+
+                if ($ticketIdFromSearch !== null) {
+                    $q->orWhere('ticket_id', $ticketIdFromSearch);
+                }
             });
         }
 
