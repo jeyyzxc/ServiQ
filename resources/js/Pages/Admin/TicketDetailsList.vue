@@ -27,17 +27,31 @@ const filteredTickets = computed(() => {
     let result = tickets.value;
 
     if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase();
-        result = result.filter(t =>
-            t.title.toLowerCase().includes(query) ||
-            t.description.toLowerCase().includes(query) ||
-            t.id.toString().includes(query) ||
-            t.user_ticket_number?.toString().includes(query) ||
-            t.user?.name?.toLowerCase().includes(query) ||
-            t.user?.email?.toLowerCase().includes(query) ||
-            t.status?.toLowerCase().includes(query) ||
-            t.status?.replace('_', ' ').toLowerCase().includes(query)
-        );
+        const query = searchQuery.value.toLowerCase().trim();
+        const ticketNumberMatch = query.match(/^(?:ticket\s*#?\s*)?(\d+)$/i);
+        const extractedNumber = ticketNumberMatch ? ticketNumberMatch[1] : null;
+
+        result = result.filter(t => {
+            if (extractedNumber) {
+                if (t.id.toString() === extractedNumber ||
+                    t.user_ticket_number?.toString() === extractedNumber) {
+                    return true;
+                }
+            }
+
+            return t.title.toLowerCase().includes(query) ||
+                t.description.toLowerCase().includes(query) ||
+                t.id.toString().includes(query) ||
+                t.user_ticket_number?.toString().includes(query) ||
+                t.user?.name?.toLowerCase().includes(query) ||
+                t.user?.email?.toLowerCase().includes(query) ||
+                t.status?.toLowerCase().includes(query) ||
+                t.status?.replace('_', ' ').toLowerCase().includes(query) ||
+                `ticket #${t.id}`.includes(query) ||
+                `ticket #${t.user_ticket_number}`.includes(query) ||
+                `#${t.id}`.includes(query) ||
+                `#${t.user_ticket_number}`.includes(query);
+        });
     }
 
     if (statusFilter.value !== 'all') {
